@@ -2,8 +2,10 @@
 const config = {
     type: 'app',
 
+    pluginType: 'CAPTURE',
     entryPoints: {
         app: './src/App.tsx',
+        plugin: './src/Plugin.tsx',
     },
 
     viteConfigExtensions: './viteConfigExtensions.mts',
