@@ -1,45 +1,53 @@
-This project was bootstrapped with [DHIS2 Application Platform](https://github.com/dhis2/app-platform).
+# Matrix Select Plugin
 
-## Available Scripts
+This is a custom form field plugin for Capture that renders multiple fields sharing the same option set as a matrix table.
 
-In the project directory, you can run:
+- **Rows** = fields
+- **Columns** = option set options
+- **Cells** = radio buttons (single select) or checkboxes (multi select)
 
-### `yarn start`
+## How it works
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The plugin receives `fieldsMetadata` and `values` from the host form.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+1. Filters fields that include an `optionSet`
+2. Validates that all the fields's optionsets are the same
+3. Optionally sets a title on the form if supplied as part of fieldsMetaData
+4. Uses the first field’s option set to build table columns
+5. Renders each row as a field and each cell as an input
+6. Updates the values when a selection changes
 
-### `yarn test`
+## Input data
 
-Launches the test runner and runs all available tests found in `/src`.<br />
+To render correctly, the fields provided to the plugin should:
 
-See the section about [running tests](https://platform.dhis2.nu/#/scripts/test) for more information.
+- Have an `optionSet`
+- Share the same options
 
-### `yarn build`
+It is also possible to provide a field used as the component title:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Add a data element in the form containing the title text
+2. In the tracker plugin configurator, include that field in the plugin inputs
+3. Set its alias to `title`
 
-The build is minified and the filenames include the hashes.<br />
-A deployable `.zip` file can be found in `build/bundle`!
+## Development
 
-See the section about [building](https://platform.dhis2.nu/#/scripts/build) for more information.
+### Install dependencies
 
-### `yarn deploy`
+```bash
+yarn install
+```
 
-Deploys the built app in the `build` folder to a running DHIS2 instance.<br />
-This command will prompt you to enter a server URL as well as the username and password of a DHIS2 user with the App Management authority.<br/>
-You must run `yarn build` before running `yarn deploy`.<br />
+### Run locally
 
-See the section about [deploying](https://platform.dhis2.nu/#/scripts/deploy) for more information.
+```bash
+yarn start
+```
 
-## Learn More
+Runs the app in development mode. The plugin is available at:
 
-You can learn more about the platform in the [DHIS2 Application Platform Documentation](https://platform.dhis2.nu/).
+- http://localhost:3000/
 
-You can learn more about the runtime in the [DHIS2 Application Runtime Documentation](https://runtime.dhis2.nu/).
+- http://localhost:3000/plugin.html
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**Note:** The plugin has no fields to display in isolation. To see it in action, configure it via the Tracker Plugin Configurator and open it in the context of a Capture form.
