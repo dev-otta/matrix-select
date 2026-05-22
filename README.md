@@ -2,9 +2,19 @@
 
 This is a custom form field plugin for Capture that renders multiple fields sharing the same option set as a matrix table.
 
-- **Rows** = fields
-- **Columns** = option set options
-- **Cells** = radio buttons (single select) or checkboxes (multi select)
+| Part        | Meaning                                                    |
+| ----------- | ---------------------------------------------------------- |
+| **Rows**    | Form fields                                                |
+| **Columns** | Options from the shared option set                         |
+| **Cells**   | Radio buttons (single select) or checkboxes (multi select) |
+
+### Examples
+
+**Single select (radio buttons)**
+<img src="docs/resources/images/radio-button-plugin-example.png" alt="Radio button matrix example" width="560" />
+
+**Multi select (checkboxes)**
+<img src="docs/resources/images/checkbox-plugin-example.png" alt="Checkbox matrix example" width="560" />
 
 ## How it works
 
@@ -17,18 +27,24 @@ The plugin receives `fieldsMetadata` and `values` from the host form.
 5. Renders each row as a field and each cell as an input
 6. Updates the values when a selection changes
 
-## Input data
+## Configuration
 
-To render correctly, the fields provided to the plugin should:
+Use the Tracker Plugin Configurator to configure the plugin.
+
+Fields passed to the plugin must:
 
 - Have an `optionSet`
-- Share the same options
+- Share the same options (same option set)
 
-It is also possible to provide a field used as the component title:
+### Optional title
 
-1. Add a data element in the form containing the title text
-2. In the tracker plugin configurator, include that field in the plugin inputs
+You can supply a field whose value is used as the matrix title:
+
+1. Add a data element on the form with the title text
+2. In the Tracker Plugin Configurator, include that field in the plugin inputs
 3. Set its alias to `title`
+
+<img src="docs/resources/images/choose-title.png" alt="Configuring the title field in Tracker Plugin Configurator" width="400" />
 
 ## Development
 
