@@ -1,11 +1,14 @@
 import React, { useState, useCallback } from 'react'
 import { IFormFieldPluginProps } from './Plugin.types'
-import styles from '@/Plugin.module.css'
 import { Tooltip, TooltipState } from './Tooltip'
+import styles from '@/Plugin.module.css'
 
-const getOptionSetSignature = (meta: any): string | null =>
+type OptionSetOption = { code: string }
+type OptionSetMeta = { optionSet?: { options?: OptionSetOption[] } }
+
+const getOptionSetSignature = (meta: OptionSetMeta): string | null =>
     meta?.optionSet?.options
-        ?.map((o: any) => o.code)
+        ?.map((o: OptionSetOption) => o.code)
         .sort()
         .join(',') ?? null
 
@@ -19,7 +22,7 @@ const Plugin = ({
     const [tooltip, setTooltip] = useState<TooltipState | null>(null)
 
     const fields = Object.entries(safeFieldsMetadata).filter(
-        ([_, meta]) => meta?.optionSet != null
+        ([, meta]) => meta?.optionSet != null
     )
 
     const title = safeFieldsMetadata['title']?.formName
@@ -28,7 +31,7 @@ const Plugin = ({
     const allSameOptionSet =
         fields.length === 0 ||
         fields.every(
-            ([_, meta]) => getOptionSetSignature(meta) === firstSignature
+            ([, meta]) => getOptionSetSignature(meta) === firstSignature
         )
     const firstMeta = fields[0]?.[1]
     const options = firstMeta?.optionSet?.options ?? []
@@ -39,7 +42,9 @@ const Plugin = ({
             const span = e.currentTarget.querySelector<HTMLSpanElement>(
                 `.${styles.headerText}`
             )
-            if (!span || span.scrollHeight <= span.clientHeight) return
+            if (!span || span.scrollHeight <= span.clientHeight) {
+                return
+            }
             const rect = e.currentTarget.getBoundingClientRect()
             setTooltip({
                 text,
@@ -94,7 +99,6 @@ const Plugin = ({
     return (
         <div className={styles.root}>
             <div className={styles.tableWrap}>
-                <div aria-hidden />
                 <fieldset disabled={viewMode} className={styles.fieldset}>
                     <table className={styles.table}>
                         <thead>

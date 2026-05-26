@@ -1,3 +1,11 @@
+type OptionSetOption = {
+    code: string
+    text: string
+}
+type OptionSet = {
+    options?: OptionSetOption[]
+}
+
 type fieldsMetadata = {
     id: string
     name: string
@@ -7,14 +15,16 @@ type fieldsMetadata = {
     compulsory: boolean
     description: string
     type: string
-    optionSet: any
+    optionSet: OptionSet
     displayInForms: boolean
     displayInReports: boolean
-    icon: any
-    unique: any
+    icon: unknown
+    unique: unknown
     searchable: boolean | undefined
     url: string | undefined
 }
+
+type FieldValue = string | undefined
 
 type FieldValueOptions = {
     valid?: boolean
@@ -24,18 +34,18 @@ type FieldValueOptions = {
 
 export type SetFieldValueProps = {
     fieldId: string
-    value: any
+    value: FieldValue
     options?: FieldValueOptions
 }
 
 type SetContextFieldValueProps = {
     fieldId: 'geometry' | 'occurredAt' | 'enrolledAt'
-    value: any
+    value: string | undefined
     options?: FieldValueOptions
 }
 
 export type IFormFieldPluginProps = {
-    values: Record<string, any>
+    values: Record<string, string | undefined>
     errors: Record<string, string[]>
     warnings: Record<string, string[]>
     fieldsMetadata: Record<string, fieldsMetadata>

@@ -1,6 +1,5 @@
-import { createPortal } from 'react-dom'
 import React from 'react'
-
+import { createPortal } from 'react-dom'
 export interface TooltipState {
     text: string
     x: number

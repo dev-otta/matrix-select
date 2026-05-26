@@ -21,16 +21,6 @@
 .tableWrap {
     overflow-x: auto;
     padding-right: 24px;
-
-    /* padding-right: 24px; */
-}
-
-.hasOverflow {
-    padding-right: 24px;
-}
-
-.hasOverflow .table {
-    margin-right: -16px;
 }
 
 .tableWrap::-webkit-scrollbar {
@@ -45,47 +35,6 @@
 .tableWrap::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.35);
     border-radius: 4px;
-}
-
-.scrollFade {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 32px; /* stronger */
-    pointer-events: none;
-    z-index: 5;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-.scrollFadeVisible {
-    opacity: 1;
-}
-
-.tableWrap[data-scroll-right='true'] .scrollFadeRight,
-.tableWrap[data-scroll-left='true'] .scrollFadeLeft {
-    opacity: 1;
-    visibility: visible;
-}
-
-.scrollFadeRight {
-    right: 0;
-    background: linear-gradient(
-        to left,
-        rgba(251, 252, 253, 0.85) 0%,
-        rgba(251, 252, 253, 0.25) 45%,
-        transparent 100%
-    );
-}
-
-.scrollFadeLeft {
-    left: 0;
-    background: linear-gradient(
-        to right,
-        rgba(251, 252, 253, 0.85) 0%,
-        rgba(251, 252, 253, 0.25) 45%,
-        transparent 100%
-    );
 }
 
 .table {
