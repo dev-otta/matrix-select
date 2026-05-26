@@ -4,7 +4,6 @@ const config = {
 
     pluginType: 'CAPTURE',
     entryPoints: {
-        app: './src/App.tsx',
         plugin: './src/Plugin.tsx',
     },
 
