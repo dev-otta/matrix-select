@@ -11,10 +11,10 @@ This is a custom form field plugin for Capture that renders multiple fields shar
 ### Examples
 
 **Single select (radio buttons)**
-<img src="docs/resources/images/radio-button-plugin-example.png" alt="Radio button matrix example" width="560" />
+<img src="docs/resources/images/single-select-plugin-example.png" alt="Radio button matrix example" width="560" />
 
 **Multi select (checkboxes)**
-<img src="docs/resources/images/checkbox-plugin-example.png" alt="Checkbox matrix example" width="560" />
+<img src="docs/resources/images/multi-select-plugin-example.png" alt="Checkbox matrix example" width="560" />
 
 ## How it works
 
