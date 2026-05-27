@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import { IFormFieldPluginProps } from './Plugin.types'
 import { Tooltip, TooltipState } from './Tooltip'
 import styles from '@/Plugin.module.css'
@@ -37,6 +37,8 @@ const Plugin = ({
     const options = firstMeta?.optionSet?.options ?? []
     const isMultiSelect = firstMeta?.type === 'MULTI_TEXT'
 
+    const tooltipTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
     const handleMouseEnter = useCallback(
         (e: React.MouseEvent<HTMLTableCellElement>, text: string) => {
             const span = e.currentTarget.querySelector<HTMLSpanElement>(
@@ -46,16 +48,24 @@ const Plugin = ({
                 return
             }
             const rect = e.currentTarget.getBoundingClientRect()
-            setTooltip({
-                text,
-                x: rect.left + rect.width / 2,
-                y: rect.bottom + 6,
-            })
+            tooltipTimer.current = setTimeout(() => {
+                setTooltip({
+                    text,
+                    x: rect.left + rect.width / 2,
+                    y: rect.bottom + 6,
+                })
+            }, 400)
         },
         []
     )
 
-    const handleMouseLeave = useCallback(() => setTooltip(null), [])
+    const handleMouseLeave = useCallback(() => {
+        if (tooltipTimer.current) {
+            clearTimeout(tooltipTimer.current)
+            tooltipTimer.current = null
+        }
+        ;(setTooltip(null), [])
+    }, [])
 
     if (fields.length === 0) {
         return (
