@@ -106,6 +106,60 @@ const Plugin = ({
         }
     }
 
+    const formatSelectedLabels = (
+        value: string | undefined,
+        options: { code: string; text: string }[],
+        isMultiSelect: boolean
+    ): string => {
+        if (!value) return '—' // or '' — decide product-wise
+
+        const codes = isMultiSelect
+            ? value
+                  .split(',')
+                  .map((c) => c.trim())
+                  .filter(Boolean)
+            : [value]
+
+        return codes
+            .map((code) => options.find((o) => o.code === code)?.text ?? code)
+            .join(', ')
+    }
+
+    if (viewMode) {
+        return (
+            <div className={styles.root}>
+                <div className={styles.summaryWrap}>
+                    {title && <h3 className={styles.summaryTitle}>{title}</h3>}
+                    <ul className={styles.summaryList}>
+                        {fields.map(([fieldId, meta]) => {
+                            const label = formatSelectedLabels(
+                                values[fieldId],
+                                options,
+                                isMultiSelect
+                            )
+                            const hasValue = !!values[fieldId]
+                            return (
+                                <li
+                                    key={fieldId}
+                                    className={styles.summaryItem}
+                                >
+                                    <span className={styles.summaryLabel}>
+                                        {meta.formName}
+                                    </span>
+                                    <span
+                                        className={`${styles.summaryValue} ${!hasValue ? styles.summaryEmpty : ''}`}
+                                    >
+                                        {label}
+                                    </span>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className={styles.root}>
             <div className={styles.tableWrap}>
