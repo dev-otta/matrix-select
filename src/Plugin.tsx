@@ -128,29 +128,34 @@ const Plugin = ({
     if (viewMode) {
         return (
             <div className={styles.root}>
-                {title && <h3 className={styles.summaryTitle}>{title}</h3>}
-                <ul className={styles.summaryList}>
-                    {fields.map(([fieldId, meta]) => {
-                        const label = formatSelectedLabels(
-                            values[fieldId],
-                            options,
-                            isMultiSelect
-                        )
-                        const hasValue = !!values[fieldId]
-                        return (
-                            <li key={fieldId} className={styles.summaryItem}>
-                                <span className={styles.summaryLabel}>
-                                    {meta.formName}
-                                </span>
-                                <span
-                                    className={`${styles.summaryValue} ${!hasValue ? styles.summaryEmpty : ''}`}
+                <div className={styles.summaryWrap}>
+                    {title && <h3 className={styles.summaryTitle}>{title}</h3>}
+                    <ul className={styles.summaryList}>
+                        {fields.map(([fieldId, meta]) => {
+                            const label = formatSelectedLabels(
+                                values[fieldId],
+                                options,
+                                isMultiSelect
+                            )
+                            const hasValue = !!values[fieldId]
+                            return (
+                                <li
+                                    key={fieldId}
+                                    className={styles.summaryItem}
                                 >
-                                    {label}
-                                </span>
-                            </li>
-                        )
-                    })}
-                </ul>
+                                    <span className={styles.summaryLabel}>
+                                        {meta.formName}
+                                    </span>
+                                    <span
+                                        className={`${styles.summaryValue} ${!hasValue ? styles.summaryEmpty : ''}`}
+                                    >
+                                        {label}
+                                    </span>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
             </div>
         )
     }
