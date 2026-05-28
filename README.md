@@ -1,6 +1,6 @@
 # Matrix Select Plugin
 
-This is a custom form field plugin for Capture that renders multiple fields sharing the same option set as a matrix table.
+This is a custom form field plugin for Capture that renders multiple fields sharing the same option set as a matrix table. The plugin supports single select (radio buttons) and multi select (checkboxes).
 
 | Part        | Meaning                                                    |
 | ----------- | ---------------------------------------------------------- |
@@ -11,9 +11,11 @@ This is a custom form field plugin for Capture that renders multiple fields shar
 ### Examples
 
 **Single select (radio buttons)**
+
 <img src="docs/resources/images/single-select-plugin-example.png" alt="Radio button matrix example" width="560" />
 
 **Multi select (checkboxes)**
+
 <img src="docs/resources/images/multi-select-plugin-example.png" alt="Checkbox matrix example" width="560" />
 
 ## How it works
@@ -27,43 +29,51 @@ The plugin receives `fieldsMetadata` and `values` from the host form.
 5. Renders each row as a field and each cell as an input
 6. Updates the values when a selection changes
 
+## Installation
+
+To install the plugin, follow these steps:
+
+1. Go to the App Hub within the App Management app
+2. Search for "Matrix Select Plugin"
+3. Install the plugin
+
 ## Configuration
 
-Use the Tracker Plugin Configurator to configure the plugin.
+Use the Tracker Plugin Configurator app to configure the plugin.
+
+1. Install the Tracker Plugin Configurator app from the App Hub and open it.
+2. Select the page for form field.
+3. Select the program you want to configure the plugin for.
+4. Click "Add element" and select the "Matrix Select Plugin" from the list of plugins.
+5. Drag and drop the plugin to where you want it to be displayed in the form.
+6. Click on the "Edit settings" icon to configure the fields that will be used in the matrix.
+7. Save.
+
+### Requirements
 
 Fields passed to the plugin must:
 
 - Have an `optionSet`
 - Share the same options (same option set)
 
+If these requirements are not met, the plugin will not be able to render the matrix and will display an error message.
+
 ### Optional title
 
-You can supply a field whose value is used as the matrix title:
+You can supply a field whose value is used as the plugin title:
 
-1. Add a data element on the form with the title text
-2. In the Tracker Plugin Configurator, include that field in the plugin inputs
-3. Set its alias to `title`
+1. If not already present, you can add a data element on the form with the title text you wish to use.
+2. In the Tracker Plugin Configurator, include that field in the plugin inputs.
+3. Set its alias to `title`. See photo below.
 
 <img src="docs/resources/images/choose-title.png" alt="Configuring the title field in Tracker Plugin Configurator" width="400" />
 
-## Development
+### Removing redundant fields
 
-### Install dependencies
+If you have existing fields that are no longer needed because they are now replaced by the plugin, you can remove them by following these steps:
 
-```bash
-yarn install
-```
-
-### Run locally
-
-```bash
-yarn start
-```
-
-Runs the app in development mode. The plugin is available at:
-
-- http://localhost:3000/
-
-- http://localhost:3000/plugin.html
-
-**Note:** The plugin has no fields to display in isolation. To see it in action, configure it via the Tracker Plugin Configurator and open it in the context of a Capture form.
+1. Open the Datastore Management app
+2. Select "capture" from the list of datastores
+3. Select "dataEntryForms" from the list
+4. Delete the fields you want to remove by deleting them from the code on the right hand side.
+5. Click "Save changes".
