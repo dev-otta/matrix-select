@@ -1,5 +1,29 @@
-# DHIS2 Platform
-node_modules
+# dependencies
+node_modules/
+
+# build output
+build/
+
+# DHIS2 / app tooling
 .d2
 src/locales
-build
+
+# Yarn (Berry, node-modules linker)
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# logs
+*.log
+yarn-error.log*
+yarn-debug.log*
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
