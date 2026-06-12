@@ -111,7 +111,7 @@ const Plugin = ({
         options: { code: string; text: string }[],
         isMultiSelect: boolean
     ): string => {
-        if (!value) return '—' // or '' — decide product-wise
+        if (!value) return ''
 
         const codes = isMultiSelect
             ? value
@@ -137,7 +137,6 @@ const Plugin = ({
                                 options,
                                 isMultiSelect
                             )
-                            const hasValue = !!values[fieldId]
                             return (
                                 <li
                                     key={fieldId}
@@ -147,7 +146,7 @@ const Plugin = ({
                                         {meta.formName}
                                     </span>
                                     <span
-                                        className={`${styles.summaryValue} ${!hasValue ? styles.summaryEmpty : ''}`}
+                                        className={`${styles.summaryValue} ${!label ? styles.summaryEmpty : ''}`}
                                     >
                                         {label}
                                     </span>
