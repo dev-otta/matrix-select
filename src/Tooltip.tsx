@@ -1,5 +1,7 @@
+import { colors } from '@dhis2/ui'
 import React from 'react'
 import { createPortal } from 'react-dom'
+
 export interface TooltipState {
     text: string
     x: number
@@ -14,9 +16,9 @@ export const Tooltip = ({ text, x, y }: TooltipState) =>
                 left: x,
                 top: y,
                 transform: 'translateX(-50%)',
-                background: '#fff',
-                color: 'rgba(0,0,0,0.87)',
-                border: '1px solid #e0e0e0',
+                background: colors.white,
+                color: colors.grey900,
+                border: `1px solid ${colors.grey400}`,
                 padding: '6px 8px',
                 borderRadius: '4px',
                 fontSize: '12px',
@@ -25,7 +27,7 @@ export const Tooltip = ({ text, x, y }: TooltipState) =>
                 maxWidth: '280px',
                 width: 'max-content',
                 zIndex: 9999,
-                boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
                 pointerEvents: 'none',
             }}
         >
