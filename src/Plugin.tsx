@@ -16,11 +16,12 @@ import { Tooltip, TooltipState } from './Tooltip'
 import styles from '@/Plugin.module.css'
 
 // @dhis2/ui types `left` as boolean, but the runtime uses it as a CSS inset value
-const FixedDataTableCell = DataTableCell as React.ForwardRefExoticComponent<
-    Omit<React.ComponentProps<typeof DataTableCell>, 'left'> & {
-        left?: string
-    }
->
+const FixedDataTableCell =
+    DataTableCell as unknown as React.ForwardRefExoticComponent<
+        Omit<React.ComponentProps<typeof DataTableCell>, 'left'> & {
+            left?: string
+        }
+    >
 
 type OptionSetOption = { code: string }
 type OptionSetMeta = { optionSet?: { options?: OptionSetOption[] } }
@@ -36,7 +37,9 @@ const formatSelectedLabels = (
     options: { code: string; text: string }[],
     isMultiSelect: boolean
 ): string => {
-    if (!value) return ''
+    if (!value) {
+        return ''
+    }
 
     const codes = isMultiSelect
         ? value
@@ -147,8 +150,7 @@ const Plugin = ({
 
     const handleChange = (fieldId: string, optCode: string) => {
         if (isMultiSelect) {
-            const current =
-                values[fieldId]?.split(',').filter(Boolean) ?? []
+            const current = values[fieldId]?.split(',').filter(Boolean) ?? []
             const updated = current.includes(optCode)
                 ? current.filter((v) => v !== optCode)
                 : [...current, optCode]
