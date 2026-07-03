@@ -1,4 +1,4 @@
-# Matrix Select Plugin
+# Matrix Select
 
 This is a custom form field plugin for the Capture app that renders multiple fields sharing the same option set as a matrix table. The plugin supports single select (radio buttons) and multi select (checkboxes).
 
@@ -34,7 +34,7 @@ The plugin receives `fieldsMetadata` and `values` from the host form.
 To install the plugin, follow these steps:
 
 1. Go to the App Hub within the App Management app
-2. Search for "Matrix Select Plugin"
+2. Search for "Matrix Select"
 3. Install the plugin
 
 ## Configuration
@@ -45,7 +45,7 @@ Use the Tracker Plugin Configurator app to configure the plugin.
 2. Select the page for form field.
 3. Select the configuration context.
 4. Click "Add configuration"
-5. Click "Add element" and select the "Matrix Select Plugin" from the list of plugins.
+5. Click "Add element" and select the "Matrix Select" from the list of plugins.
 6. Drag and drop the plugin to where you want it to be displayed in the form.
 7. Click on the "Edit settings" icon to configure the fields that will be used in the matrix.
 8. Save.
