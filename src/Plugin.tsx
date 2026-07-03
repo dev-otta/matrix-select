@@ -1,7 +1,26 @@
-import React, { useState, useCallback, useRef } from 'react'
+import i18n from '@dhis2/d2-i18n'
+import {
+    Checkbox,
+    colors,
+    DataTable,
+    DataTableBody,
+    DataTableCell,
+    DataTableHead,
+    DataTableRow,
+    NoticeBox,
+    Radio,
+} from '@dhis2/ui'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { IFormFieldPluginProps } from './Plugin.types'
 import { Tooltip, TooltipState } from './Tooltip'
 import styles from '@/Plugin.module.css'
+
+// @dhis2/ui types `left` as boolean, but the runtime uses it as a CSS inset value
+const FixedDataTableCell = DataTableCell as React.ForwardRefExoticComponent<
+    Omit<React.ComponentProps<typeof DataTableCell>, 'left'> & {
+        left?: string
+    }
+>
 
 type OptionSetOption = { code: string }
 type OptionSetMeta = { optionSet?: { options?: OptionSetOption[] } }
@@ -11,6 +30,25 @@ const getOptionSetSignature = (meta: OptionSetMeta): string | null =>
         ?.map((o: OptionSetOption) => o.code)
         .sort()
         .join(',') ?? null
+
+const formatSelectedLabels = (
+    value: string | undefined,
+    options: { code: string; text: string }[],
+    isMultiSelect: boolean
+): string => {
+    if (!value) return ''
+
+    const codes = isMultiSelect
+        ? value
+              .split(',')
+              .map((c) => c.trim())
+              .filter(Boolean)
+        : [value]
+
+    return codes
+        .map((code) => options.find((o) => o.code === code)?.text ?? code)
+        .join(', ')
+}
 
 const Plugin = ({
     values,
@@ -36,11 +74,16 @@ const Plugin = ({
     const firstMeta = fields[0]?.[1]
     const options = firstMeta?.optionSet?.options ?? []
     const isMultiSelect = firstMeta?.type === 'MULTI_TEXT'
+    const SelectControl = isMultiSelect ? Checkbox : Radio
 
     const tooltipTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const handleMouseEnter = useCallback(
         (e: React.MouseEvent<HTMLTableCellElement>, text: string) => {
+            if (tooltipTimer.current) {
+                clearTimeout(tooltipTimer.current)
+                tooltipTimer.current = null
+            }
             const span = e.currentTarget.querySelector<HTMLSpanElement>(
                 `.${styles.headerText}`
             )
@@ -64,13 +107,22 @@ const Plugin = ({
             clearTimeout(tooltipTimer.current)
             tooltipTimer.current = null
         }
-        ;(setTooltip(null), [])
+        setTooltip(null)
     }, [])
+
+    useEffect(
+        () => () => {
+            if (tooltipTimer.current) {
+                clearTimeout(tooltipTimer.current)
+            }
+        },
+        []
+    )
 
     if (fields.length === 0) {
         return (
             <div className={styles.root}>
-                <p className={styles.empty}>No fields to display.</p>
+                <NoticeBox>{i18n.t('No fields to display.')}</NoticeBox>
             </div>
         )
     }
@@ -78,10 +130,9 @@ const Plugin = ({
     if (!allSameOptionSet) {
         return (
             <div className={styles.root}>
-                <p className={styles.error}>
-                    Configuration error: all fields must share the same option
-                    set.
-                </p>
+                <NoticeBox error title={i18n.t('Configuration error')}>
+                    {i18n.t('All fields must share the same option set.')}
+                </NoticeBox>
             </div>
         )
     }
@@ -89,7 +140,7 @@ const Plugin = ({
     if (options.length === 0) {
         return (
             <div className={styles.root}>
-                <p className={styles.empty}>No options available.</p>
+                <NoticeBox>{i18n.t('No options available.')}</NoticeBox>
             </div>
         )
     }
@@ -106,29 +157,12 @@ const Plugin = ({
         }
     }
 
-    const formatSelectedLabels = (
-        value: string | undefined,
-        options: { code: string; text: string }[],
-        isMultiSelect: boolean
-    ): string => {
-        if (!value) return ''
-
-        const codes = isMultiSelect
-            ? value
-                  .split(',')
-                  .map((c) => c.trim())
-                  .filter(Boolean)
-            : [value]
-
-        return codes
-            .map((code) => options.find((o) => o.code === code)?.text ?? code)
-            .join(', ')
-    }
-
     if (viewMode) {
         return (
             <div className={styles.root}>
-                <div className={styles.summaryWrap}>
+                <div
+                    className={`${styles.summaryWrap} ${title ? styles.summaryWrapWithTitle : ''}`}
+                >
                     {title && <h3 className={styles.summaryTitle}>{title}</h3>}
                     <ul className={styles.summaryList}>
                         {fields.map(([fieldId, meta]) => {
@@ -161,75 +195,90 @@ const Plugin = ({
 
     return (
         <div className={styles.root}>
-            <div className={styles.tableWrap}>
-                <fieldset disabled={viewMode} className={styles.fieldset}>
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                <th className={styles.titleCell}>
-                                    <span className={styles.title}>
-                                        {title}
-                                    </span>
-                                </th>
-                                {options.map((opt) => (
-                                    <th
-                                        key={opt.code}
-                                        className={styles.headerCell}
-                                        onMouseEnter={(e) =>
-                                            handleMouseEnter(e, opt.text)
-                                        }
-                                        onMouseLeave={handleMouseLeave}
-                                    >
-                                        <span className={styles.headerText}>
-                                            {opt.text}
-                                        </span>
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {fields.map(([fieldId, meta]) => (
-                                <tr className={styles.row} key={fieldId}>
-                                    <td className={styles.labelCell}>
-                                        {meta.formName}
-                                    </td>
-                                    {options.map((opt) => {
-                                        const checked = isMultiSelect
-                                            ? (values[fieldId]
-                                                  ?.split(',')
-                                                  .includes(opt.code) ?? false)
-                                            : values[fieldId] === opt.code
-                                        return (
-                                            <td
-                                                key={opt.code}
-                                                className={styles.inputCell}
-                                            >
-                                                <input
-                                                    className={styles.input}
-                                                    type={
-                                                        isMultiSelect
-                                                            ? 'checkbox'
-                                                            : 'radio'
-                                                    }
-                                                    name={`${fieldId}-radio`}
-                                                    disabled={viewMode}
-                                                    checked={checked}
-                                                    onChange={() =>
-                                                        handleChange(
-                                                            fieldId,
-                                                            opt.code
-                                                        )
-                                                    }
-                                                />
-                                            </td>
-                                        )
-                                    })}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </fieldset>
-            </div>
+            <DataTable
+                scrollWidth="100%"
+                className={`${styles.tableWrap} ${title ? styles.tableWrapWithTitle : ''}`}
+            >
+                <DataTableHead>
+                    <DataTableRow>
+                        <FixedDataTableCell
+                            tag="th"
+                            fixed
+                            left="0"
+                            width="40cqw"
+                            backgroundColor={colors.grey050}
+                            className={styles.titleCell}
+                        >
+                            <span className={styles.title}>{title}</span>
+                        </FixedDataTableCell>
+                        {options.map((opt) => (
+                            <DataTableCell
+                                key={opt.code}
+                                tag="th"
+                                align="center"
+                                backgroundColor={colors.grey050}
+                                className={styles.headerCell}
+                                onMouseEnter={(e) =>
+                                    handleMouseEnter(e, opt.text)
+                                }
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                <span className={styles.headerText}>
+                                    {opt.text}
+                                </span>
+                            </DataTableCell>
+                        ))}
+                    </DataTableRow>
+                </DataTableHead>
+                <DataTableBody>
+                    {fields.map(([fieldId, meta], index) => {
+                        const rowBackground =
+                            index % 2 === 0 ? colors.grey050 : colors.white
+                        const selectedCodes = isMultiSelect
+                            ? new Set(values[fieldId]?.split(',') ?? [])
+                            : null
+                        return (
+                            <DataTableRow key={fieldId}>
+                                <FixedDataTableCell
+                                    fixed
+                                    left="0"
+                                    width="40cqw"
+                                    backgroundColor={rowBackground}
+                                    className={styles.labelCell}
+                                >
+                                    {meta.formName}
+                                </FixedDataTableCell>
+                                {options.map((opt) => {
+                                    const checked = selectedCodes
+                                        ? selectedCodes.has(opt.code)
+                                        : values[fieldId] === opt.code
+                                    return (
+                                        <DataTableCell
+                                            key={opt.code}
+                                            align="center"
+                                            backgroundColor={rowBackground}
+                                            className={styles.inputCell}
+                                        >
+                                            <SelectControl
+                                                dense
+                                                className={styles.input}
+                                                name={fieldId}
+                                                checked={checked}
+                                                onChange={() =>
+                                                    handleChange(
+                                                        fieldId,
+                                                        opt.code
+                                                    )
+                                                }
+                                            />
+                                        </DataTableCell>
+                                    )
+                                })}
+                            </DataTableRow>
+                        )
+                    })}
+                </DataTableBody>
+            </DataTable>
             {tooltip && <Tooltip {...tooltip} />}
         </div>
     )

@@ -32,7 +32,7 @@ type FieldValueOptions = {
     error?: string
 }
 
-export type SetFieldValueProps = {
+type SetFieldValueProps = {
     fieldId: string
     value: FieldValue
     options?: FieldValueOptions
