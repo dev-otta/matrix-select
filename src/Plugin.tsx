@@ -147,7 +147,8 @@ const Plugin = ({
 
     const handleChange = (fieldId: string, optCode: string) => {
         if (isMultiSelect) {
-            const current = values[fieldId]?.split(',') ?? []
+            const current =
+                values[fieldId]?.split(',').filter(Boolean) ?? []
             const updated = current.includes(optCode)
                 ? current.filter((v) => v !== optCode)
                 : [...current, optCode]
@@ -235,7 +236,9 @@ const Plugin = ({
                         const rowBackground =
                             index % 2 === 0 ? colors.grey050 : colors.white
                         const selectedCodes = isMultiSelect
-                            ? new Set(values[fieldId]?.split(',') ?? [])
+                            ? new Set(
+                                  values[fieldId]?.split(',').filter(Boolean)
+                              )
                             : null
                         return (
                             <DataTableRow key={fieldId}>
